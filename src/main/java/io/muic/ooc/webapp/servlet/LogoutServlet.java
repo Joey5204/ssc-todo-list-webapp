@@ -2,13 +2,10 @@ package io.muic.ooc.webapp.servlet;
 
 import io.muic.ooc.webapp.Routable;
 import io.muic.ooc.webapp.service.SecurityService;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.IOException;
 
 public class LogoutServlet extends HttpServlet implements Routable {
@@ -18,8 +15,7 @@ public class LogoutServlet extends HttpServlet implements Routable {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         securityService.logout(request);
-        RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/login.jsp");
-        rd.include(request, response);
+        response.sendRedirect("login");
     }
 
     @Override

@@ -5,10 +5,8 @@
  */
 package io.muic.ooc.webapp;
 
-import io.muic.ooc.webapp.servlet.HomeServlet;
+import io.muic.ooc.webapp.servlet.*;
 import io.muic.ooc.webapp.service.SecurityService;
-import io.muic.ooc.webapp.servlet.LoginServlet;
-import io.muic.ooc.webapp.servlet.LogoutServlet;
 import jakarta.servlet.http.HttpServlet;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
@@ -25,9 +23,12 @@ public class ServletRouter {
     private static final List<Class<? extends Routable>> routables = new ArrayList<>();
 
     static {
-        routables.add(HomeServlet.class);
+        routables.add(ToDoServlet.class);
         routables.add(LoginServlet.class);
         routables.add(LogoutServlet.class);
+        routables.add(IndexServlet.class);
+        routables.add(SignUpServlet.class);
+        routables.add(TaskServlet.class);
     }
 
     private SecurityService securityService;

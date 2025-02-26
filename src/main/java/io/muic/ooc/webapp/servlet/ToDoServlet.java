@@ -16,17 +16,13 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-/**
- *
- * @author gigadot
- */
-public class HomeServlet extends HttpServlet implements Routable {
+public class ToDoServlet extends HttpServlet implements Routable {
 
     private SecurityService securityService;
 
     @Override
     public String getMapping() {
-        return "/index.jsp";
+        return "/todo";
     }
 
     @Override
@@ -38,14 +34,13 @@ public class HomeServlet extends HttpServlet implements Routable {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean authorized = securityService.isAuthorized(request);
         if (authorized) {
-            // do MVC in here
             String username = (String) request.getSession().getAttribute("username");
             request.setAttribute("username", username);
 
             UserService userService = UserService.getInstance();
-            request.setAttribute("users", userService.findAll());
+            request.setAttribute("tasks", userService.findTasksByUsername(username));
 
-            RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/home.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/todo.jsp");
             rd.include(request, response);
         } else {
             response.sendRedirect("/login");

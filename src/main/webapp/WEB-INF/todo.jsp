@@ -35,7 +35,9 @@
             text-align: center;
             width: 80%;
             max-width: 800px;
-            margin-top: 80px; /* Push content below the navbar */
+            margin-top: 80px;
+            max-height: 500px;
+            overflow-y: auto;
         }
         h3 {
             color: white;
@@ -43,7 +45,7 @@
             margin-bottom: 20px;
         }
         .table {
-            background: #f0f0f0; /* Light grey background */
+            background: #f0f0f0;
             color: black;
             border-radius: 10px;
             overflow: hidden;
@@ -65,6 +67,22 @@
             background: #e63946;
             border: none;
         }
+
+        /* Custom scrollbar styles */
+        .container-box::-webkit-scrollbar {
+            width: 10px; /* Adjust width as needed */
+        }
+        .container-box::-webkit-scrollbar-track {
+            background: #f0f0f0; /* Light grey background */
+            border-radius: 10px; /* Rounded corners for the track */
+        }
+        .container-box::-webkit-scrollbar-thumb {
+            background: #888; /* Customize scrollbar color */
+            border-radius: 10px; /* Rounded corners for the thumb */
+        }
+        .container-box::-webkit-scrollbar-thumb:hover {
+            background: #555; /* Darken the scrollbar color on hover */
+        }
     </style>
 </head>
 <body>
@@ -80,24 +98,48 @@
 <div class="container-box">
     <h3>Welcome, ${username}</h3>
 
+    <form action="/task" method="post">
+        <input type="hidden" name="action" value="create">
+        <input type="text" name="name" placeholder="Task Name" required>
+        <input type="text" name="description" placeholder="Task Description" required>
+        <label style="color: white;">
+            <input type="checkbox" name="status"> Completed
+        </label>
+        <button type="submit" class="btn btn-success">
+            <i class="fa fa-plus"></i> Create New Task
+        </button>
+    </form>
+
+
     <table class="table table-striped table-bordered mt-3">
         <thead>
         <tr>
-            <th class="py-3">Id</th>
-            <th class="py-3">Username</th>
-            <th class="py-3">Display Name</th>
+            <th class="py-3">Task</th>
+            <th class="py-3">Description</th>
+            <th class="py-3">Status</th>
             <th class="py-3">Actions</th>
         </tr>
         </thead>
         <tbody>
-        <c:forEach var="user" items="${users}">
+        <c:forEach var="task" items="${tasks}">
             <tr>
-                <td class="py-3">${user.id}</td>
-                <td class="py-3">${user.username}</td>
-                <td class="py-3">${user.displayName}</td>
+                <td class="py-3">${task.name}</td>
+                <td class="py-3">${task.description}</td>
+                <td class="py-3">${task.status ? "Completed" : "Incomplete"}</td>
                 <td class="align-middle">
-                    <button class="btn btn-warning btn-sm" type="button"><i class="fa fa-pencil"></i></button>
-                    <button class="btn btn-danger btn-sm" type="button"><i class="fa fa-trash"></i></button>
+                    <form action="/task" method="post" style="display: inline;">
+                        <input type="hidden" name="action" value="update">
+                        <input type="hidden" name="id" value="${task.id}">
+                        <input type="hidden" name="name" value="${task.name}">
+                        <input type="hidden" name="description" value="${task.description}">
+                        <input type="hidden" name="status" value="${task.status}">
+                        <button class="btn btn-warning btn-sm" type="submit"><i class="fa fa-pencil"></i></button>
+                    </form>
+                    <form action="/task" method="post" style="display: inline;">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="id" value="${task.id}">
+                        <button class="btn btn-danger btn-sm" type="submit"><i class="fa fa-trash"></i></button>
+                    </form>
                 </td>
             </tr>
         </c:forEach>
