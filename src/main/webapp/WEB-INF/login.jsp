@@ -65,7 +65,6 @@
         <input type="password" name="password" class="form-control" placeholder="Password" required>
         <button type="submit" class="btn btn-signin">Sign In</button>
     </form>
-    <p class="forgot-password"><a href="#">Forgot Password?</a></p>
     <p class="signup-text">New to the app? <a href="signup">Sign Up</a></p>
 </div>
 </body>

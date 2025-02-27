@@ -19,6 +19,8 @@ public class UserService {
     private static final String INSERT_TASK_SQL = "INSERT INTO tbl_task(name, description, status, username) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_TASK_SQL = "UPDATE tbl_task SET name = ?, description = ?, status = ? WHERE id = ?";
     private static final String DELETE_TASK_SQL = "DELETE FROM tbl_task WHERE id = ?";
+    private static final String SELECT_TASK_BY_ID_SQL = "SELECT * FROM tbl_task WHERE id = ? AND username = ?";
+
 
     private static UserService service;
 
@@ -151,8 +153,26 @@ public class UserService {
         return tasks;
     }
 
+    public Task getTaskById(long id, String username) throws SQLException {
+        try (
+                Connection connection = databaseConnectionService.getConnection();
+                PreparedStatement ps = connection.prepareStatement(SELECT_TASK_BY_ID_SQL);
+        ) {
+            ps.setLong(1, id);
+            ps.setString(2, username);
+            ResultSet resultSet = ps.executeQuery();
 
-
+            if (resultSet.next()) {
+                return new Task(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getBoolean("status")
+                );
+            }
+        }
+        return null; // Task not found
+    }
 
     public void createTask(String name, String description, boolean status, String username) throws SQLException {
         try (
@@ -217,7 +237,4 @@ public class UserService {
             e.printStackTrace();
         }
     }
-
-
-
 }

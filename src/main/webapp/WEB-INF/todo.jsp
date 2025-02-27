@@ -67,21 +67,37 @@
             background: #e63946;
             border: none;
         }
-
+        .status-label {
+            font-size: 20px; /* Match the original size for consistency */
+        }
+        .status-label.complete {
+            color: #28a745; /* Green for completed */
+        }
+        .status-label.complete::before {
+            content: "\f00c"; /* Font Awesome check (✔) */
+            font-family: "FontAwesome";
+        }
+        .status-label.incomplete {
+            color: #e63946; /* Red for incomplete */
+        }
+        .status-label.incomplete::before {
+            content: "\f00d"; /* Font Awesome X */
+            font-family: "FontAwesome";
+        }
         /* Custom scrollbar styles */
         .container-box::-webkit-scrollbar {
-            width: 10px; /* Adjust width as needed */
+            width: 10px;
         }
         .container-box::-webkit-scrollbar-track {
-            background: #f0f0f0; /* Light grey background */
-            border-radius: 10px; /* Rounded corners for the track */
+            background: #f0f0f0;
+            border-radius: 10px;
         }
         .container-box::-webkit-scrollbar-thumb {
-            background: #888; /* Customize scrollbar color */
-            border-radius: 10px; /* Rounded corners for the thumb */
+            background: #888;
+            border-radius: 10px;
         }
         .container-box::-webkit-scrollbar-thumb:hover {
-            background: #555; /* Darken the scrollbar color on hover */
+            background: #555;
         }
     </style>
 </head>
@@ -90,7 +106,7 @@
     <div class="container-fluid">
         <a class="navbar-brand">To-Do List Webapp</a>
         <a class="btn btn-dark" type="button" href="/logout">
-            <i class="fa fa-sign-out"></i> &nbsp; Logout
+            <i class="fa fa-sign-out"></i>   Logout
         </a>
     </div>
 </nav>
@@ -102,14 +118,10 @@
         <input type="hidden" name="action" value="create">
         <input type="text" name="name" placeholder="Task Name" required>
         <input type="text" name="description" placeholder="Task Description" required>
-        <label style="color: white;">
-            <input type="checkbox" name="status"> Completed
-        </label>
         <button type="submit" class="btn btn-success">
             <i class="fa fa-plus"></i> Create New Task
         </button>
     </form>
-
 
     <table class="table table-striped table-bordered mt-3">
         <thead>
@@ -125,10 +137,11 @@
             <tr>
                 <td class="py-3">${task.name}</td>
                 <td class="py-3">${task.description}</td>
-                <td class="py-3">${task.status ? "Completed" : "Incomplete"}</td>
+                <td class="py-3">
+                    <span class="status-label ${task.status ? 'complete' : 'incomplete'}"></span>
+                </td>
                 <td class="align-middle">
-                    <form action="/task" method="post" style="display: inline;">
-                        <input type="hidden" name="action" value="update">
+                    <form action="/edit" method="get" style="display: inline;">
                         <input type="hidden" name="id" value="${task.id}">
                         <input type="hidden" name="name" value="${task.name}">
                         <input type="hidden" name="description" value="${task.description}">
