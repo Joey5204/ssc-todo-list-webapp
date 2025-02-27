@@ -67,24 +67,6 @@
             background: #e63946;
             border: none;
         }
-        .status-label {
-            font-size: 20px; /* Match the original size for consistency */
-        }
-        .status-label.complete {
-            color: #28a745; /* Green for completed */
-        }
-        .status-label.complete::before {
-            content: "\f00c"; /* Font Awesome check (✔) */
-            font-family: "FontAwesome";
-        }
-        .status-label.incomplete {
-            color: #e63946; /* Red for incomplete */
-        }
-        .status-label.incomplete::before {
-            content: "\f00d"; /* Font Awesome X */
-            font-family: "FontAwesome";
-        }
-        /* Custom scrollbar styles */
         .container-box::-webkit-scrollbar {
             width: 10px;
         }
@@ -99,6 +81,10 @@
         .container-box::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+        .toggle-btn {
+            font-size: 14px;
+            padding: 2px 8px;
+        }
     </style>
 </head>
 <body>
@@ -106,7 +92,7 @@
     <div class="container-fluid">
         <a class="navbar-brand">To-Do List Webapp</a>
         <a class="btn btn-dark" type="button" href="/logout">
-            <i class="fa fa-sign-out"></i>   Logout
+            <i class="fa fa-sign-out"></i> Logout
         </a>
     </div>
 </nav>
@@ -138,7 +124,14 @@
                 <td class="py-3">${task.name}</td>
                 <td class="py-3">${task.description}</td>
                 <td class="py-3">
-                    <span class="status-label ${task.status ? 'complete' : 'incomplete'}"></span>
+                    <form action="/task" method="post" style="display: inline;">
+                        <input type="hidden" name="action" value="updateStatus">
+                        <input type="hidden" name="id" value="${task.id}">
+                        <input type="hidden" name="status" value="${!task.status}">
+                        <button type="submit" class="btn toggle-btn ${task.status ? 'btn-success' : 'btn-secondary'}">
+                                ${task.status ? 'Completed' : 'Incomplete'}
+                        </button>
+                    </form>
                 </td>
                 <td class="align-middle">
                     <form action="/edit" method="get" style="display: inline;">
@@ -148,16 +141,49 @@
                         <input type="hidden" name="status" value="${task.status}">
                         <button class="btn btn-warning btn-sm" type="submit"><i class="fa fa-pencil"></i></button>
                     </form>
-                    <form action="/task" method="post" style="display: inline;">
-                        <input type="hidden" name="action" value="delete">
-                        <input type="hidden" name="id" value="${task.id}">
-                        <button class="btn btn-danger btn-sm" type="submit"><i class="fa fa-trash"></i></button>
-                    </form>
+                    <button class="btn btn-danger btn-sm delete-btn" data-task-id="${task.id}" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="fa fa-trash"></i>
+                    </button>
                 </td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this task?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="post" action="/task">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="id" id="deleteTaskId">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const taskId = this.getAttribute("data-task-id");
+                document.getElementById("deleteTaskId").value = taskId;
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

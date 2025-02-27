@@ -57,11 +57,6 @@
             <label for="description">Task Description:</label>
             <input type="text" id="description" name="description" value="${taskDescription}" class="form-control" required>
         </div>
-        <div class="form-group">
-            <label for="status">Status:</label>
-            <input type="checkbox" id="status" name="status" value="true" ${taskStatus ? 'checked' : ''}>
-            <label for="status"> Completed</label>
-        </div>
         <button type="submit" class="btn btn-success">Save Changes</button>
         <a href="/todo" class="btn btn-danger">Cancel</a>
     </form>
