@@ -39,5 +39,6 @@ build/
 
 *.env
 config.properties
-.idea
-target
+data.sql
+start-mysql.sh
+*.jar
