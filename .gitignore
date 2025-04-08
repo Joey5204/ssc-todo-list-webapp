@@ -42,3 +42,4 @@ config.properties
 data.sql
 start-mysql.sh
 *.jar
+.idea/
